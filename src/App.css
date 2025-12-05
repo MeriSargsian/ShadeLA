@@ -22,12 +22,12 @@ body,
 }
 
 /* ===================================
-   GRID LAYOUT
+   GRID LAYOUT (DESKTOP)
 =================================== */
 
 .app-root {
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.3fr);
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
   grid-template-rows: 1fr 1fr;
   gap: 16px;
   padding: 16px;
@@ -67,21 +67,24 @@ body,
   position: relative;
 }
 
-/* Placement */
+/* ===================================
+   PANEL PLACEMENT (DESKTOP)
+   LEFT: PowerBI + Ranking  (.panel-right)
+   RIGHT: Unreal + Map
+=================================== */
 
 .panel-right {
-  grid-column: 1;        /* moved from column 2 → column 1 */
+  grid-column: 1;
   grid-row: 1 / span 2;
 }
 
-/* RIGHT COLUMN NOW: Unreal (top) + Map (bottom) */
 .panel-unreal {
-  grid-column: 2;        /* moved from column 1 → column 2 */
+  grid-column: 2;
   grid-row: 1;
 }
 
 .panel-map {
-  grid-column: 2;        /* moved from column 1 → column 2 */
+  grid-column: 2;
   grid-row: 2;
 }
 
@@ -106,8 +109,6 @@ body,
   min-height: 0;
 }
 
-/* PowerBI container */
-
 .powerbi-wrapper-outer,
 .powerbi-embed {
   width: 100%;
@@ -120,7 +121,7 @@ body,
 }
 
 /* ===================================
-   PLACEHOLDER PANELS (Unreal/Map)
+   PLACEHOLDERS (Unreal / Map)
 =================================== */
 
 .placeholder {
@@ -176,22 +177,49 @@ body,
   color: rgba(255, 255, 255, 0.4);
 }
 
-/* Table container */
+/* Table scroll container */
 .ranking-table-wrapper {
   flex: 1;
-  overflow-y: auto;          /* ONLY vertical scroll */
-  overflow-x: hidden;        /* hide horizontal scroll */
+  overflow-y: auto;
+  overflow-x: hidden !important;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(12, 12, 18, 0.95);
 }
 
-/* Actual table */
+/* DARK SCROLLBARS */
+.ranking-table-wrapper::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.ranking-table-wrapper::-webkit-scrollbar-track {
+  background: #0d0d12;
+  border-radius: 10px;
+}
+
+.ranking-table-wrapper::-webkit-scrollbar-thumb {
+  background: #3b3b4a;
+  border-radius: 10px;
+  border: 2px solid #0d0d12;
+}
+
+.ranking-table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #4e4e60;
+}
+
+.ranking-table-wrapper {
+  scrollbar-width: thin;
+  scrollbar-color: #3b3b4a #0d0d12;
+}
+
+/* Table */
 .ranking-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.78rem;
-  table-layout: fixed;       /* enforce column widths + ellipsis */
+  table-layout: fixed;
+  overflow-x: hidden;
 }
 
 .ranking-table thead {
@@ -205,9 +233,9 @@ body,
 .ranking-table td {
   padding: 6px 10px;
   text-align: left;
-  white-space: nowrap;       /* prevent multi-line rows */
+  white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;   /* add "..." on overflow */
+  text-overflow: ellipsis;
 }
 
 .ranking-table th {
@@ -241,28 +269,83 @@ body,
   opacity: 0.7;
 }
 
-.ranking-footer {
-  margin-top: 6px;
-  font-size: 0.72rem;
-  opacity: 0.75;
-}
-
 /* ===================================
-   RESPONSIVE
+   RESPONSIVE BREAKPOINTS
 =================================== */
 
-@media (max-width: 900px) {
+/* ——————— Medium screens ——————— */
+@media (max-width: 1200px) {
   .app-root {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-    height: auto;
-  }
-
-  .panel-right {
-    grid-row: auto;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 12px;
   }
 
   .panel {
-    min-height: 260px;
+    padding: 10px;
+  }
+}
+
+/* ——————— Mobile / Tablet ——————— */
+@media (max-width: 900px) {
+  .app-root {
+    display: flex;
+    flex-direction: column;
+     min-height: 1200px !important;
+  }
+
+  /* Reset grid placement */
+  .panel-right,
+  .panel-unreal,
+  .panel-map {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  /* Stack order */
+  .panel-right {
+    order: 1;
+  }
+
+  .panel-unreal {
+    order: 2;
+  }
+
+  .panel-map {
+    order: 3;
+  }
+
+  /* PowerBI bigger on mobile */
+  .right-powerbi {
+    flex: 2.2;     /* MORE height now */
+  }
+
+  .right-ranking {
+    flex: 1;
+  }
+
+  /* Ranking table shows only ~10 rows */
+  .ranking-table-wrapper {
+    max-height: 280px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+
+/* ——————— Extra Small ——————— */
+@media (max-width: 600px) {
+  .ranking-table th,
+  .ranking-table td {
+    padding: 5px 8px;
+    font-size: 0.74rem;
+  }
+
+  .ranking-search {
+    flex: 1;
+    max-width: none;
+  }
+
+  .panel-header h2 {
+    font-size: 0.78rem;
   }
 }
